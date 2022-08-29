@@ -15,7 +15,9 @@ from time import perf_counter
 import click
 import imageio
 import numpy as np
-import PIL.Image
+import PIL.Image, PIL.ImageFile
+PIL.ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 import torch
 import torch.nn.functional as F
 
@@ -164,7 +166,6 @@ def run_projection(
     with dnnlib.util.open_url(network_pkl) as fp:
         G = legacy.load_network_pkl(fp)['G_ema'].requires_grad_(False).to(device) # type: ignore
 
-    PIL.ImageFile.LOAD_TRUNCATED_IMAGES = True
     # Load target image.
     target_pil = PIL.Image.open(target_fname).convert('RGB')
     w, h = target_pil.size
